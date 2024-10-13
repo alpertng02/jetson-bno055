@@ -17,13 +17,8 @@ static int8_t jetson_i2c_bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t* 
     if (reg_data == nullptr) {
         return BNO055_ERROR;
     }
-
-    uint8_t msg[I2C_BUFFER_LEN] { reg_addr };
-    std::memcpy(msg + 1, reg_data, wr_len);
-
     // Write data to register(s) over I2C
-
-    const auto ret = i2c_write(&i2cdev, dev_addr, msg, (wr_len + 1));
+    const auto ret = i2c_write(&i2cdev, reg_addr, reg_data, wr_len);
     if (ret == -1) {
         return BNO055_ERROR;
     }
@@ -35,12 +30,7 @@ static int8_t jetson_i2c_bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t* r
     if (reg_data == nullptr) {
         return BNO055_ERROR;
     }
-    const auto writeRes = i2c_write(&i2cdev, dev_addr, &reg_addr, 1);
-    if (writeRes == -1) {
-        return BNO055_ERROR;
-    }
-
-    const int readRes = i2c_read(&i2cdev, dev_addr, reg_data, r_len);
+    const int readRes = i2c_read(&i2cdev, reg_addr, reg_data, r_len);
     if (readRes == -1) {
         return BNO055_ERROR;
     }
