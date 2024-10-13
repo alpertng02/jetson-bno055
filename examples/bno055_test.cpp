@@ -7,9 +7,14 @@ void sleep_ms(uint32_t ms) {
     std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 }
 
-int main() {
+int main(int argc, char **argv) {
 
-    imu::BNO055 bno("/dev/i2c-0", 0x28);
+    if (argc != 3) {
+        std::cout << "Error! Given parameters are wrong!\n";
+        return -1;
+    }
+    
+    imu::BNO055 bno(argv[1], std::stoi(argv[2]));
     sleep_ms(10);
 
     if (!bno.isOpen()) {
