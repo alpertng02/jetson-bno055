@@ -1,0 +1,6 @@
+[submodule "lib/BNO055_SensorAPI"]
+	path = lib/BNO055_SensorAPI
+	url = https://github.com/boschsensortec/BNO055_SensorAPI.git
+[submodule "lib/libi2c"]
+	path = lib/libi2c
+	url = https://github.com/amaork/libi2c.git
