@@ -66,7 +66,8 @@ imu::BNO055::BNO055(const std::string& busName, uint8_t dev_addr) {
     i2cdev.bus = bus;
     i2cdev.addr = dev_addr;
     i2cdev.iaddr_bytes = 1;
-    i2cdev.page_bytes = 8;
+    i2cdev.page_bytes = I2C_BUFFER_LEN;
+    jetson_delay_ms(100);
 
     bno_.bus_read = jetson_i2c_bus_read;
     bno_.bus_write = jetson_i2c_bus_write;

@@ -31,12 +31,21 @@ int main(int argc, char **argv) {
     std::cout << "BNO055 operation mode is set to NDOF\n";
     sleep_ms(100);
 
+    std::cout << std::endl;
     while (true) {
-        auto [eulerAngles, res] = bno.getEulerAngles();
-        if (res) {
+
+        auto [accel, accelRes] = bno.getAccelMsq();
+        if (accelRes) {
+            printf("x: %3.2f,  y: %3.2f,  z: %3.2f\n", accel.x, accel.y, accel.z);
+        } else {
+            printf("Error! Could not reat accel from BNO055.\n");
+        }
+
+        auto [eulerAngles, eulerRes] = bno.getEulerAngles();
+        if (eulerRes) {
             printf("h: %3.2f,   p: %3.2f,   r: %3.2f\n\n", eulerAngles.h, eulerAngles.p, eulerAngles.r);
         } else {
-            printf("Error! Could not read from BNO055\n");
+            printf("Error! Could not read euler angles from BNO055.\n");
         }
         sleep_ms(10);
     }

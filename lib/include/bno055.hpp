@@ -61,37 +61,37 @@ public:
 
     std::pair<Accel, bool> getAccelMsq() {
         std::pair<Accel, bool> data {};
-        data.second = bno055_convert_double_accel_xyz_msq(&data.first);
+        data.second = checkResult(bno055_convert_double_accel_xyz_msq(&data.first));
         return data;
     }
 
     std::pair<Accel, bool> getAccelMg() {
         std::pair<Accel, bool> data {};
-        data.second = bno055_convert_double_accel_xyz_mg(&data.first);
+        data.second = checkResult(bno055_convert_double_accel_xyz_mg(&data.first));
         return data;
     }
 
     std::pair<LinearAccel, bool> getLinearAccelMsq() {
         std::pair<LinearAccel, bool> data {};
-        data.second = bno055_convert_double_linear_accel_xyz_msq(&data.first);
+        data.second = checkResult(bno055_convert_double_linear_accel_xyz_msq(&data.first));
         return data;
     }
 
     std::pair<Quaternion, bool> getQuaternion() {
         std::pair<Quaternion, bool> data {};
-        data.second = bno055_read_quaternion_wxyz(&data.first);
+        data.second = checkResult(bno055_read_quaternion_wxyz(&data.first));
         return data;
     }
 
     std::pair<EulerAngles, bool> getEulerAngles() {
         std::pair<EulerAngles, bool> data {};
-        data.second = bno055_convert_double_euler_hpr_deg(&data.first);
+        data.second = checkResult(bno055_convert_double_euler_hpr_deg(&data.first));
         return data;
     }
 
     std::pair<EulerRads, bool> getEulerRads() {
         std::pair<EulerRads, bool> data {};
-        data.second = bno055_convert_double_euler_hpr_rad(&data.first);
+        data.second = checkResult(bno055_convert_double_euler_hpr_rad(&data.first));
         return data;
     }
 
