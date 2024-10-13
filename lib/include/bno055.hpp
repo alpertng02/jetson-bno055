@@ -1,6 +1,6 @@
 #ifndef BNO055_HPP
 #define BNO055_HPP
-extern "C" {   
+extern "C" {
 #include "BNO055_SensorAPI/bno055.h"
 }
 #include <cstdint>
@@ -13,14 +13,16 @@ namespace imu {
 
 class BNO055 {
 public:
+    BNO055() = default;
     BNO055(const std::string& busName, uint8_t dev_addr);
+
+    bool init(const std::string& busName, uint8_t devAddr);
 
     enum PowerMode {
         Normal = BNO055_POWER_MODE_NORMAL,
         LowPower = BNO055_POWER_MODE_LOWPOWER,
         Suspend = BNO055_POWER_MODE_SUSPEND,
     };
-
     bool setPowerMode(BNO055::PowerMode powerMode) {
         return checkResult(bno055_set_power_mode(powerMode));
     }
@@ -44,11 +46,6 @@ public:
         return checkResult(bno055_set_operation_mode(operationMode));
     }
 
-    std::pair<uint8_t, bool> getSystemCalibrationStatus() {
-        uint8_t calibStatus {};
-        bool res = checkResult(bno055_get_sys_calib_stat(&calibStatus));
-        return { calibStatus, res };
-    }
 
     using Accel = bno055_accel_double_t;
     using LinearAccel = bno055_linear_accel_double_t;
@@ -59,49 +56,26 @@ public:
     using EulerRads = bno055_euler_double_t;
     using Quaternion = bno055_quaternion_t;
 
-    std::pair<Accel, bool> getAccelMsq() {
-        std::pair<Accel, bool> data {};
-        data.second = checkResult(bno055_convert_double_accel_xyz_msq(&data.first));
-        return data;
-    }
+    std::pair<uint8_t, bool> getSystemCalibrationStatus();
 
-    std::pair<Accel, bool> getAccelMg() {
-        std::pair<Accel, bool> data {};
-        data.second = checkResult(bno055_convert_double_accel_xyz_mg(&data.first));
-        return data;
-    }
+    std::pair<Accel, bool> getAccelMsq();
+    std::pair<Accel, bool> getAccelMg();
 
-    std::pair<LinearAccel, bool> getLinearAccelMsq() {
-        std::pair<LinearAccel, bool> data {};
-        data.second = checkResult(bno055_convert_double_linear_accel_xyz_msq(&data.first));
-        return data;
-    }
+    std::pair<LinearAccel, bool> getLinearAccelMsq();
 
-    std::pair<Quaternion, bool> getQuaternion() {
-        std::pair<Quaternion, bool> data {};
-        data.second = checkResult(bno055_read_quaternion_wxyz(&data.first));
-        return data;
-    }
+    std::pair<Gyro, bool> getGyroDps();
+    std::pair<Gyro, bool> getGyroRps();
 
-    std::pair<EulerAngles, bool> getEulerAngles() {
-        std::pair<EulerAngles, bool> data {};
-        data.second = checkResult(bno055_convert_double_euler_hpr_deg(&data.first));
-        return data;
-    }
+    std::pair<Mag, bool> getMagUT();
 
-    std::pair<EulerRads, bool> getEulerRads() {
-        std::pair<EulerRads, bool> data {};
-        data.second = checkResult(bno055_convert_double_euler_hpr_rad(&data.first));
-        return data;
-    }
+    std::pair<Quaternion, bool> getQuaternion();
 
-    bool isOpen() {
-        return isOpen_;
-    }
+    std::pair<EulerAngles, bool> getEulerAngles();
+    std::pair<EulerRads, bool> getEulerRads();
 
+    ~BNO055();
 private:
     bno055_t bno_ {};
-    bool isOpen_ = false;
 
     bool checkResult(int8_t res) {
         return res == BNO055_SUCCESS ? true : false;
