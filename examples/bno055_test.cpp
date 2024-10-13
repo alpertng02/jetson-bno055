@@ -8,13 +8,7 @@ void sleep_ms(uint32_t ms) {
 }
 
 int main(int argc, char **argv) {
-
-    if (argc != 3) {
-        std::cout << "Error! Given parameters are wrong!\n";
-        return -1;
-    }
-    
-    imu::BNO055 bno(argv[1], std::stoi(argv[2]));
+    imu::BNO055 bno("/dev/i2c-1", 0x28);
     sleep_ms(10);
 
     if (!bno.isOpen()) {
@@ -27,12 +21,14 @@ int main(int argc, char **argv) {
         std::cout << "Error! BNO055 power mode could not be set!\n";
         return -1;
     }
+    std::cout << "BNO055 power mode is set to normal.\n";
     sleep_ms(100);
 
     if (!bno.setOperationMode(imu::BNO055::OperationMode::NDOF)) {
         std::cout << "Error! BNO055 opearation mode could not be set!\n";
         return -1;
     }
+    std::cout << "BNO055 operation mode is set to NDOF\n";
     sleep_ms(100);
 
     while (true) {
