@@ -14,7 +14,7 @@
 static I2CDevice i2cdev {};
 static constexpr size_t I2C_BUFFER_LEN = 16;
 
-static int8_t jetson_i2c_bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t* reg_data, uint8_t wr_len) {
+static int8_t jetson_i2c_bus_write([[maybe_unused]]uint8_t dev_addr, uint8_t reg_addr, uint8_t* reg_data, uint8_t wr_len) {
     if (reg_data == nullptr) {
         return BNO055_ERROR;
     }
@@ -27,7 +27,7 @@ static int8_t jetson_i2c_bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t* 
     return BNO055_SUCCESS;
 }
 
-static int8_t jetson_i2c_bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t* reg_data, uint8_t r_len) {
+static int8_t jetson_i2c_bus_read([[maybe_unused]]uint8_t dev_addr, uint8_t reg_addr, uint8_t* reg_data, uint8_t r_len) {
     if (reg_data == nullptr) {
         return BNO055_ERROR;
     }
@@ -153,11 +153,14 @@ imu::BNO055::Mag imu::BNO055::getMagUT() {
 }
 
 imu::BNO055::Quaternion imu::BNO055::getQuaternion() {
-    imu::BNO055::Quaternion data {};
-    auto res = checkResult(bno055_read_quaternion_wxyz(&data));
+    bno055_quaternion_t dataRead {};
+    auto res = checkResult(bno055_read_quaternion_wxyz(&dataRead));
     if (res != BNO055_SUCCESS) {
         throw std::runtime_error("Communication to the device was failed\n");
     }
+    constexpr double scale = (1.0 / (1 << 14));
+
+    imu::BNO055::Quaternion data { scale * dataRead.w, scale * dataRead.x, scale * dataRead.y, scale * dataRead.z };
     return data;
 }
 

@@ -55,7 +55,13 @@ public:
 
     using EulerAngles = bno055_euler_double_t;
     using EulerRads = bno055_euler_double_t;
-    using Quaternion = bno055_quaternion_t;
+
+    struct Quaternion {
+        double w {};
+        double x {};
+        double y {};
+        double z {};
+    };
 
     uint8_t getSystemCalibrationStatus();
 
