@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <limits>
 #include "bno055.hpp"
 
 void sleep_ms(uint32_t ms) {
@@ -9,9 +10,31 @@ void sleep_ms(uint32_t ms) {
 
 int main(int argc, char** argv) {
     
+    if (argc != 3) {
+        std::cout << "Error! Invalid command line arguments!\n";
+        return -1;
+    }
+
+    std::string_view deviceDirectory { argv[1] };
+
+    uint8_t deviceAddress {};
+    try {
+        auto deviceAdressInput = std::stoul(argv[2]);
+        if (deviceAdressInput < 0 || deviceAdressInput > std::numeric_limits<uint8_t>().max()) {
+            std::cout << "Error! Device I2C adress is not valid!\n";
+            return -1;
+        } else {
+            deviceAddress = static_cast<uint8_t>(deviceAdressInput);
+        }
+
+    } catch (std::invalid_argument& err) {
+        std::cout << "Error! Argument \"" << argv[2] << "\" is not a proper I2C adress!\n";
+        return -1;
+    }
+
     imu::BNO055 bno;
 
-    if (!bno.init("/dev/i2c-1", 0x28)) {
+    if (!bno.init(deviceDirectory, deviceAddress)) {
         std::cout << "Error! Device could not be opened!\n";
         return -1;
     } 

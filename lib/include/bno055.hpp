@@ -4,7 +4,7 @@ extern "C" {
 #include "BNO055_SensorAPI/bno055.h"
 }
 #include <cstdint>
-#include <string>
+#include <string_view>
 #include <optional>
 
 // Your code here
@@ -14,9 +14,9 @@ namespace imu {
 class BNO055 {
 public:
     BNO055() = default;
-    BNO055(const std::string& busName, uint8_t dev_addr);
+    BNO055(std::string_view busName, uint8_t dev_addr);
 
-    bool init(const std::string& busName, uint8_t devAddr);
+    bool init(std::string_view busName, uint8_t devAddr);
 
     enum PowerMode {
         Normal = BNO055_POWER_MODE_NORMAL,

@@ -46,14 +46,14 @@ static void jetson_delay_ms(uint32_t ms) {
 /**\name    BNO055 WRAPPER FUNCTIONS           */
 /***************************************************************/
 
-imu::BNO055::BNO055(const std::string& busName, uint8_t devAddr) {
+imu::BNO055::BNO055(std::string_view busName, uint8_t devAddr) {
     if (!init(busName, devAddr)) {
-        throw;
+        throw std::invalid_argument("Connection to the BNO055 device could not be accomplished!\n");
     }
 }
 
-bool imu::BNO055::init(const std::string& busName, uint8_t devAddr) {
-    int bus = i2c_open(busName.c_str());
+bool imu::BNO055::init(std::string_view busName, uint8_t devAddr) {
+    int bus = i2c_open(busName.data());
     if (bus == -1) {
         std::cout << "Error! I2C device " << busName << " could not be opened!\n";
         return false;
