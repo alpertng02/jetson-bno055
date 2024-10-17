@@ -95,7 +95,7 @@ bool imu::BNO055::init(std::string_view busName, uint8_t devAddr) {
 uint8_t imu::BNO055::getSystemCalibrationStatus() {
     uint8_t data {};
     auto res = checkResult(bno055_get_sys_calib_stat(&data));
-    if (res != BNO055_SUCCESS) {
+    if (!res) {
         throw std::runtime_error("Communication to the device was failed\n");
     }
     return data;
@@ -104,7 +104,7 @@ uint8_t imu::BNO055::getSystemCalibrationStatus() {
 imu::BNO055::Accel imu::BNO055::getAccelMsq() {
     imu::BNO055::Accel data {};
     auto res = checkResult(bno055_convert_double_accel_xyz_msq(&data));
-    if (res != BNO055_SUCCESS) {
+    if (!res) {
         throw std::runtime_error("Communication to the device was failed\n");
     }
     return data;
@@ -113,7 +113,7 @@ imu::BNO055::Accel imu::BNO055::getAccelMsq() {
 imu::BNO055::Accel imu::BNO055::getAccelMg() {
     imu::BNO055::Accel data {};
     auto res = checkResult(bno055_convert_double_accel_xyz_mg(&data));
-    if (res != BNO055_SUCCESS) {
+    if (!res) {
         throw std::runtime_error("Communication to the device was failed\n");
     }
     return data;
@@ -122,7 +122,7 @@ imu::BNO055::Accel imu::BNO055::getAccelMg() {
 imu::BNO055::LinearAccel imu::BNO055::getLinearAccelMsq() {
     imu::BNO055::LinearAccel data {};
     auto res = checkResult(bno055_convert_double_linear_accel_xyz_msq(&data));
-    if (res != BNO055_SUCCESS) {
+    if (!res) {
         throw std::runtime_error("Communication to the device was failed\n");
     }
     return data;
@@ -131,7 +131,7 @@ imu::BNO055::LinearAccel imu::BNO055::getLinearAccelMsq() {
 imu::BNO055::Gyro imu::BNO055::getGyroDps() {
     imu::BNO055::Gyro data {};
     auto res = checkResult(bno055_convert_double_gyro_xyz_dps(&data));
-    if (res != BNO055_SUCCESS) {
+    if (!res) {
         throw std::runtime_error("Communication to the device was failed\n");
     }
     return data;
@@ -140,7 +140,7 @@ imu::BNO055::Gyro imu::BNO055::getGyroDps() {
 imu::BNO055::Gyro imu::BNO055::getGyroRps() {
     imu::BNO055::Gyro data {};
     auto res = checkResult(bno055_convert_double_gyro_xyz_rps(&data));
-    if (res != BNO055_SUCCESS) {
+    if (!res) {
         throw std::runtime_error("Communication to the device was failed\n");
     }
     return data;
@@ -149,7 +149,7 @@ imu::BNO055::Gyro imu::BNO055::getGyroRps() {
 imu::BNO055::Mag imu::BNO055::getMagUT() {
     imu::BNO055::Mag data {};
     auto res = checkResult(bno055_convert_double_mag_xyz_uT(&data));
-    if (res != BNO055_SUCCESS) {
+    if (!res) {
         throw std::runtime_error("Communication to the device was failed\n");
     }
     return data;
@@ -158,7 +158,7 @@ imu::BNO055::Mag imu::BNO055::getMagUT() {
 imu::BNO055::Quaternion imu::BNO055::getQuaternion() {
     bno055_quaternion_t dataRead {};
     auto res = checkResult(bno055_read_quaternion_wxyz(&dataRead));
-    if (res != BNO055_SUCCESS) {
+    if (!res) {
         throw std::runtime_error("Communication to the device was failed\n");
     }
     constexpr double scale = (1.0 / (1 << 14));
@@ -170,7 +170,7 @@ imu::BNO055::Quaternion imu::BNO055::getQuaternion() {
 imu::BNO055::EulerAngles imu::BNO055::getEulerAngles() {
     imu::BNO055::EulerAngles data {};
     auto res = checkResult(bno055_convert_double_euler_hpr_deg(&data));
-    if (res != BNO055_SUCCESS) {
+    if (!res) {
         throw std::runtime_error("Communication to the device was failed\n");
     }
     return data;
@@ -179,7 +179,7 @@ imu::BNO055::EulerAngles imu::BNO055::getEulerAngles() {
 imu::BNO055::EulerRads imu::BNO055::getEulerRads() {
     imu::BNO055::EulerRads data {};
     auto res = checkResult(bno055_convert_double_euler_hpr_rad(&data));
-    if (res != BNO055_SUCCESS) {
+    if (!res) {
         throw std::runtime_error("Communication to the device was failed\n");
     }
     return data;
