@@ -50,17 +50,20 @@ imu::BNO055::BNO055(std::string_view busName, uint8_t devAddr, imu::BNO055::Powe
     if (!init(busName, devAddr)) {
         throw std::runtime_error("Connection to the BNO055 device could not be accomplished!\n");
     }
-    constexpr uint32_t initSleepDur = 10;
+    constexpr uint32_t initSleepDur = 100;
     jetson_delay_ms(initSleepDur);
 
     bool res = setPowerMode(powerMode);
+    if (!res) {
+        throw std::runtime_error("BNO055 device was connected but power mode could not be configured!\n");
+    }
     jetson_delay_ms(initSleepDur);
 
-    res &= setOperationMode(operationMode);
-    jetson_delay_ms(initSleepDur);
+    res = setOperationMode(operationMode);
     if (!res) {
-        throw std::runtime_error("BNO055 device was connected but could not be configured!\n");
+        throw std::runtime_error("BNO055 device was connected but opearation mode could not be configured!\n");
     }
+    jetson_delay_ms(initSleepDur);
 }
 
 bool imu::BNO055::init(std::string_view busName, uint8_t devAddr) {
@@ -83,7 +86,7 @@ bool imu::BNO055::init(std::string_view busName, uint8_t devAddr) {
 
     bno_.dev_addr = devAddr;
 
-    if (bno055_init(&bno_) == BNO055_SUCCESS) {
+    if (bno055_init(&bno_) != BNO055_SUCCESS) {
         return false;
     }
     return true;
