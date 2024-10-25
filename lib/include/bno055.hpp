@@ -40,6 +40,8 @@ public:
 
     bool init(std::string_view busName, uint8_t devAddr);
 
+    bool reconnect();
+
     bool setPowerMode(BNO055::PowerMode powerMode) {
         return checkResult(bno055_set_power_mode(powerMode));
     }
@@ -83,6 +85,8 @@ public:
     ~BNO055();
 private:
     bno055_t bno_ {};
+    std::string busName_ {};
+    uint8_t devAddr_ {};
 
     bool checkResult(int8_t res) {
         return res == BNO055_SUCCESS ? true : false;

@@ -14,7 +14,7 @@
 static I2CDevice i2cdev {};
 static constexpr size_t I2C_BUFFER_LEN = 16;
 
-static int8_t jetson_i2c_bus_write([[maybe_unused]]uint8_t dev_addr, uint8_t reg_addr, uint8_t* reg_data, uint8_t wr_len) {
+static int8_t jetson_i2c_bus_write([[maybe_unused]] uint8_t dev_addr, uint8_t reg_addr, uint8_t* reg_data, uint8_t wr_len) {
     if (reg_data == nullptr) {
         return BNO055_ERROR;
     }
@@ -27,7 +27,7 @@ static int8_t jetson_i2c_bus_write([[maybe_unused]]uint8_t dev_addr, uint8_t reg
     return BNO055_SUCCESS;
 }
 
-static int8_t jetson_i2c_bus_read([[maybe_unused]]uint8_t dev_addr, uint8_t reg_addr, uint8_t* reg_data, uint8_t r_len) {
+static int8_t jetson_i2c_bus_read([[maybe_unused]] uint8_t dev_addr, uint8_t reg_addr, uint8_t* reg_data, uint8_t r_len) {
     if (reg_data == nullptr) {
         return BNO055_ERROR;
     }
@@ -46,7 +46,8 @@ static void jetson_delay_ms(uint32_t ms) {
 /**\name    BNO055 WRAPPER FUNCTIONS           */
 /***************************************************************/
 
-imu::BNO055::BNO055(std::string_view busName, uint8_t devAddr, imu::BNO055::PowerMode powerMode, imu::BNO055::OperationMode operationMode) {
+imu::BNO055::BNO055(std::string_view busName, uint8_t devAddr, imu::BNO055::PowerMode powerMode, imu::BNO055::OperationMode operationMode) :
+    busName_(busName), devAddr_(devAddr) {
     if (!init(busName, devAddr)) {
         throw std::runtime_error("Connection to the BNO055 device could not be accomplished!\n");
     }
@@ -69,7 +70,7 @@ imu::BNO055::BNO055(std::string_view busName, uint8_t devAddr, imu::BNO055::Powe
 bool imu::BNO055::init(std::string_view busName, uint8_t devAddr) {
     int bus = i2c_open(busName.data());
     if (bus == -1) {
-        std::cout << "Error! I2C device " << busName << " could not be opened!\n";
+        // std::cout << "Error! I2C device " << busName << " could not be opened!\n";
         return false;
     }
 
@@ -91,6 +92,11 @@ bool imu::BNO055::init(std::string_view busName, uint8_t devAddr) {
     }
     return true;
 }
+
+bool imu::BNO055::reconnect() {
+    return init(busName_, devAddr_);
+}
+
 
 uint8_t imu::BNO055::getSystemCalibrationStatus() {
     uint8_t data {};
